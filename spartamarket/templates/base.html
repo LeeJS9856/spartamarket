@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="navbar">
+        {% if request.user.is_authenticated %}
+        <h3> 사용자명 : {{user}} </h3>
+        <!-- <a href="{% url 'product:create' %}">글쓰기</a> -->
+        <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="로그아웃">
+        </form>
+        <!-- <form action="{% url 'accounts:profile' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="내 정보">
+        </form> -->
+        {% else %}
+        <a href="{% url 'accounts:login' %}">로그인</a>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
+
+</html>
