@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.http import require_POST, require_http_methods
 
@@ -21,8 +22,9 @@ def login(request):
 
 @require_POST
 def logout(request):
-    pass
-# Create your views here.
+    if request.user.is_authenticated:
+        auth_logout(request)
+    return redirect('products:home')
 
 def signup(request):
     return render(request, 'accounts/signup.html')
