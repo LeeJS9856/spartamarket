@@ -11,12 +11,13 @@
     <div class="navbar">
         {% if request.user.is_authenticated %}
         <h3> 사용자명 : {{user}} </h3>
-        
+
         <form action="{% url 'accounts:logout' %}" method="post">
             {% csrf_token %}
             <input type="submit" value="로그아웃">
         </form>
-        
+        <a href="{% url 'accounts:profile' %}">내정보</a>
+
         {% else %}
         <a href="{% url 'accounts:login' %}">로그인</a>
         {% endif %}
