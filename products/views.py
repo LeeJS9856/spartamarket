@@ -53,6 +53,7 @@ def delete(request, id) :
     if request.user.is_authenticated:
         article = get_object_or_404(Article, id=id)
         if request.method == "POST" :
+            article.image.delete()
             article.delete()
             return redirect("products:home")
         context = {"article" : article}
