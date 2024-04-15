@@ -4,7 +4,7 @@
     <h1>내 정보 수정</h1>
     <form action="{% url 'accounts:update_profile' %}" method="post">
         {% csrf_token %}
-        <h3>닉네임 : {{ form_name.first_name }} </h3> <br>
+        <h3>닉네임 : {{ form_name.nickname }} </h3> <br>
         {{ form_password.as_p}}
         <input type="submit" value="수정하기">
     </form>

@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
-from .forms import CustomUserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from .forms import CustomUserChangeForm, CustomUserCreationForm
 from django.views.decorators.http import require_POST, require_http_methods
 
 @require_http_methods(['GET', 'POST'])
@@ -30,13 +30,13 @@ def logout(request):
 @require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
             return redirect('products:home')
     else :
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     context = {
         'form': form,
     }
@@ -50,11 +50,11 @@ def profile(request):
 def update_profile(request):
     if request.method == "POST":
         form_name = CustomUserChangeForm(request.POST, instance = request.user)
-        form_password = form_password = PasswordChangeForm(request.user, request.POST)
+        form_password = PasswordChangeForm(request.user, request.POST)
         if form_name.is_valid() & form_password.is_valid():
             form_name.save()
             form_password.save()
-            return redirect('accounts:profile')
+            return redirect('accounts:profile') 
     else :
         form_name = CustomUserChangeForm(instance = request.user)
         form_password = PasswordChangeForm(request.user)

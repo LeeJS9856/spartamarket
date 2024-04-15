@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ article.title }}</h2>
+    <p>{{ article.author.username }}</p>
+    
+    {% if article.image %}
+        <img src="{{ article.image.url }}">
+    {% endif %}
+
+    <p>{{ article.content }}</p>
+    <p>작성일시 : {{ article.created_at }}</p>
+
+    <a href="{% url 'products:home'%}">
+        <button>
+            <i class="fas fa-arrow-circle-left"></i>
+            <span>목록으로</span>
+        </button>
+    </a>
+{% endblock content %}
