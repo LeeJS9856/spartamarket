@@ -11,6 +11,12 @@
     <p>{{ article.content }}</p>
     <p>작성일시 : {{ article.created_at }}</p>
 
+    <a href="{% url 'products:edit' article.id %}">수정</a>
+    <form action="{% url 'products:delete' article.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+
     <a href="{% url 'products:home'%}">
         <button>
             <i class="fas fa-arrow-circle-left"></i>
