@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>내 정보</h1>
-    <h2> {{ user.nickname }}</h2>
-    <h2> {{ user.date_joined }}</h2>
-    <a href="{% url 'accounts:update_profile' %}">정보 수정</a>
+<h1>프로필</h1>
+<h2> {{ member.nickname }}</h2>
+<h2> {{ member.date_joined }}</h2>
+
+{% if request.user != member %}
+<form action="{% url 'accounts:follow' member.id %}" method="POST">
+    {% csrf_token %}
+    {% if request.user in member.followers.all %}
+        <input type="submit" value="언팔로우">
+    {% else %}
+        <input type="submit" value="팔로우">
+    {% endif %}
+
+
+</form>
+{% endif %}
+
+<a href="{% url 'accounts:update_profile' %}">정보 수정</a>
 {% endblock content %}

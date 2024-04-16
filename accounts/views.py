@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from .forms import CustomUserChangeForm, CustomUserCreationForm, CustomAuthenticationForm, CustomPasswordChangeForm
 from django.views.decorators.http import require_POST, require_http_methods
+from django.shortcuts import get_object_or_404
 
 
 @require_http_methods(['GET', 'POST'])
@@ -46,8 +47,12 @@ def signup(request):
     return render(request, 'accounts/signup.html', context)
 
 
-def profile(request):
-    return render(request, 'accounts/profile.html')
+def profile(request, id):
+    member = get_object_or_404(get_user_model(), id=id)
+    context = {
+        "member": member,
+    }
+    return render(request, 'accounts/profile.html', context)
 
 
 @login_required
@@ -76,3 +81,17 @@ def update_nickname(request):
     if form_name.is_valid():
         form_name.save()
         return redirect('accounts:update_profile')
+
+@require_POST
+def follow(request, id):
+    if request.user.is_authenticated:
+        user = get_object_or_404(get_user_model(), id=id)
+        if user != request.user :
+            if user.followers.filter(id=request.user.id).exists() :
+                user.followers.remove(request.user)
+            else :
+                user.followers.add(request.user)
+        return redirect('accounts:profile', id = user.id)
+    
+    else :
+        return redirect('accounts:login')

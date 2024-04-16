@@ -6,3 +6,4 @@ from django.conf import settings
 
 class User(AbstractUser):
     nickname = models.CharField(max_length=100, null=True, blank=False)
+    followings = models.ManyToManyField('self', symmetrical=False ,related_name="followers")

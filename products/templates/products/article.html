@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>{{ article.title }}</h2>
-    <p>{{ article.author.username }}</p>
+    <a href="{% url 'accounts:profile' article.author.id %}">{{ article.author.nickname }}</a>
     
     {% if article.image %}
         <img src="{{ article.image.url }}">

@@ -17,7 +17,7 @@
             {% csrf_token %}
             <input type="submit" value="로그아웃">
         </form>
-        <a href="{% url 'accounts:profile' %}">내정보</a>
+        <a href="{% url 'accounts:profile' user.id %}">내정보</a>
         <a href="{% url 'products:create' %}">물품 등록</a>
 
         {% else %}
