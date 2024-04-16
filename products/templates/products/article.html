@@ -17,6 +17,15 @@
         <input type="submit" value="삭제">
     </form>
 
+    <form action="{% url 'products:like' article.id %}" method="POST">
+        {% csrf_token %}
+        {% if request.user in article.like_users.all %}
+            <input type="submit" value="좋아요 취소">       
+        {% else %}
+            <input type="submit" value="좋아요">
+        {% endif %}
+    </form>
+
     <a href="{% url 'products:home'%}">
         <button>
             <i class="fas fa-arrow-circle-left"></i>

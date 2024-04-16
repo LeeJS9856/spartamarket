@@ -58,3 +58,15 @@ def delete(request, id) :
             return redirect("products:home")
         context = {"article" : article}
         return render(request, 'products/delete.html', context)
+    
+
+@require_POST
+def like(request, id) :
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, id=id)
+        if article.like_users.filter(id=request.user.id).exists() :
+            article.like_users.remove(request.user)
+        else :
+            article.like_users.add(request.user)
+        return redirect("products:article", article.id)
+    return redirect("accounts:login")

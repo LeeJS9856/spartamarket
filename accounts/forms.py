@@ -68,9 +68,3 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
     )
-
-class CustomMinimumLengthValidator(DjangoMinimumLengthValidator):
-    def get_help_text(self):
-        return _(
-            "Your password must contain at least %(min_length)d characters. Please make it longer."
-        ) % {"min_length": self.min_length}
