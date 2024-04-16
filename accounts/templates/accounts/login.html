@@ -5,8 +5,7 @@
     <h1>스파르타 마켓 로고</h1>
     <form action="" method="POST">
         {% csrf_token %}
-        {{ form.username }} <br>
-        {{ form.password }} <br>
+        {{ form.as_p }} <br>
         <input type="submit" value="로그인">
     </form>
     <a href="{% url 'accounts:signup' %}">

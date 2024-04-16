@@ -9,8 +9,9 @@
 
 <body>
     <div class="navbar">
+        <a href="{% url 'products:home' %}">스파르탕근마켓</a>
         {% if request.user.is_authenticated %}
-        <h3> 사용자명 : {{user}} </h3>
+        <h3> 사용자명 : {{user.nickname}} </h3>
 
         <form action="{% url 'accounts:logout' %}" method="post">
             {% csrf_token %}

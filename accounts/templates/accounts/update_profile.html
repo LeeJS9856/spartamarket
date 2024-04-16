@@ -2,10 +2,14 @@
 
 {% block content %}
     <h1>내 정보 수정</h1>
-    <form action="{% url 'accounts:update_profile' %}" method="post">
+    <form action="{% url 'accounts:update_nickname' %}" method="POST">
         {% csrf_token %}
-        <h3>닉네임 : {{ form_name.nickname }} </h3> <br>
+        <p>닉네임 : {{ form_name.nickname }} </p> <br>
+        <input type="submit" value="닉네임 변경">
+    </form>
+    <form action="{% url 'accounts:update_profile' %}" method="POST">
+        {% csrf_token %}
         {{ form_password.as_p}}
-        <input type="submit" value="수정하기">
+        <input type="submit" value="비밀번호 변경">
     </form>
 {% endblock content %}
