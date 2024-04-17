@@ -50,6 +50,8 @@ def create(request):
             article.author = request.user
             article.save()
             return redirect("products:article", article.id)
+        context = {"form": form}
+        return render(request, 'products/create.html', context)
     else:
         form = ArticleForm()
     context = {"form": form}
