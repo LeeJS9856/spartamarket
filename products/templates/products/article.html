@@ -1,35 +1,58 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-    <h2>{{ article.title }}</h2>
-    <a href="{% url 'accounts:profile' article.author.id %}">{{ article.author.nickname }}</a>
+<div class="custom-body">
     
     {% if article.image %}
-        <img src="{{ article.image.url }}">
+    <img class="rounded mx-auto d-block" src="{{ article.image.url }}"><br>
     {% endif %}
+    
+    <div class = "border-bottom" onclick="goToProfile('{{ article.author }}')" style="font-size: 17px; margin-top:20px; margin-bottom: 20px; padding-bottom: 20px; font-weight: 500;">{{ article.author.nickname }}</div>
 
-    <p>{{ article.content }}</p>
-    <p>작성일시 : {{ article.created_at }}</p>
+    <div class = "border-bottom" style="margin-top:20px; margin-bottom: 20px; padding-bottom:20px">
+        <h1 style="font-size: 20px; font-weight: 800;" >{{ article.title }}</h1>
+        <p style="font-size: 18px; font-weight: 500;">{{ article.price }} 원</p>
+        <p>{{ article.content }}</p>
+        <p>{{ article_time }}</p>
+    </div>
+    
+    <div class="d-flex justify-content-between">
+        <form id="like-form" action="{% url 'products:like' article.id %}" method="POST">
+            {% csrf_token %}
+            {% if request.user in article.like_users.all %}
+                <img src='{% static "products/un_like.png"%}' onclick="submitForm(event, 'like-form')">    
+            {% else %}
+                <img src='{% static "products/like.png"%}' onclick="submitForm(event, 'like-form')">
+            {% endif %}
+        </form>
+        <div class="d-flex" style="font-size: small; color: darkgray;">
+            {% if request.user == article.author %}
+                <p onclick="goToEdit('{{ article.id }}')">수정</p>      
+                <form id="delete-form" action="{% url 'products:delete' article.id %}" method="POST">
+                    {% csrf_token %}
+                    <p onclick = "submitForm(event, 'delete-form')" style="margin-left: 15px;">삭제</p>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    
 
-    <a href="{% url 'products:edit' article.id %}">수정</a>
-    <form action="{% url 'products:delete' article.id %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="삭제">
-    </form>
+</div>
 
-    <form action="{% url 'products:like' article.id %}" method="POST">
-        {% csrf_token %}
-        {% if request.user in article.like_users.all %}
-            <input type="submit" value="좋아요 취소">       
-        {% else %}
-            <input type="submit" value="좋아요">
-        {% endif %}
-    </form>
-
-    <a href="{% url 'products:home'%}">
-        <button>
-            <i class="fas fa-arrow-circle-left"></i>
-            <span>목록으로</span>
-        </button>
-    </a>
+<script>
+    function goToProfile(author) {
+        window.location.href = "../../../accounts/"+author+"/profile/";
+    }
+    function goToEdit(articleID) {
+        window.location.href = "../../edit/"+articleID;
+    }
+    function submitForm(event, formID) {
+        event.preventDefault();
+        var form = document.getElementById(formID);
+            form.submit();
+    }
+</script>
+    
 {% endblock content %}
