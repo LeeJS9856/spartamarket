@@ -8,7 +8,7 @@
     <img class="rounded mx-auto d-block" src="{{ article.image.url }}"><br>
     {% endif %}
     
-    <div class = "border-bottom" onclick="goToProfile('{{ article.author }}')" style="font-size: 17px; margin-top:20px; margin-bottom: 20px; padding-bottom: 20px; font-weight: 500;">{{ article.author.nickname }}</div>
+    <div class = "border-bottom" onclick="goToProfile('{{ article.author.id }}')" style="font-size: 17px; margin-top:20px; margin-bottom: 20px; padding-bottom: 20px; font-weight: 500;">{{ article.author.nickname }}</div>
 
     <div class = "border-bottom" style="margin-top:20px; margin-bottom: 20px; padding-bottom:20px">
         <h1 style="font-size: 20px; font-weight: 800;" >{{ article.title }}</h1>
