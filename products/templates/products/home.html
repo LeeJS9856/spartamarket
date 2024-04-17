@@ -2,8 +2,11 @@
 {% load static %}
 
 {% block content %}
-
-<div class="row row-cols-1 row-cols-md-4 g-4">
+<div class="home-div">
+    <h1>스파르타 마켓</h1>
+    <p>우리들을 위한 중고거래</p>
+</div>
+<div class="row row-cols-1 row-cols-md-4 g-4 custom-body">
     {% for article in articles %}
     <div class="col" onclick="goToArticle('{{ article.id }}')">
         <div class="card h-100 rounded-4">
@@ -13,7 +16,7 @@
             <img src='{% static "products/noimage.png"%}' class="img-fluid rounded-5" alt="">
             {% endif %}
             <div class="card-body">
-                <h2 class="card-title">{{ article.title }}</h2> <br>
+                <h4 class="card-title">{{ article.title }}</h4> <br>
                 <div class="card-text">{{ article.price }} 원</div>
             </div>
         </div>

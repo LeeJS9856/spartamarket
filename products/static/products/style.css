@@ -3,13 +3,20 @@
     font-weight: 200;
     font-size: 30px;
     font-style: normal;
-    color:tomato
+    color:tomato;
+}
+
+.custom-navbar {
+    padding-left: 25vw;
+    padding-right: 25vw;
+}
+
+.custom-body {
+    padding-left: 30vw;
+    padding-right: 30vw;
 }
 
 body {
-    padding-left: 30vw;
-    padding-right: 30vw;
-
     font-family: "Noto Sans KR", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -17,8 +24,22 @@ body {
 }
 
 @media (max-width: 1600px) {
-    body {
+    .custom-body {
+        padding-left: 15vw;
+        padding-right: 15vw;
+    }
+
+    .custom-navbar {
         padding-left: 10vw;
         padding-right: 10vw;
     }
+}
+
+.home-div{
+    width: 100%; 
+    margin: 0 auto; 
+    text-align: center; 
+    background-color: #ffe9b9;
+    padding: 40px;
+    margin-bottom: 40px;
 }
