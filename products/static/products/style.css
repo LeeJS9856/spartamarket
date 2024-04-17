@@ -1,0 +1,24 @@
+.custom-navbar-brand {
+    font-family: "Gasoek One", sans-serif;
+    font-weight: 200;
+    font-size: 30px;
+    font-style: normal;
+    color:tomato
+}
+
+body {
+    padding-left: 30vw;
+    padding-right: 30vw;
+
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+@media (max-width: 1600px) {
+    body {
+        padding-left: 10vw;
+        padding-right: 10vw;
+    }
+}

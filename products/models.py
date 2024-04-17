@@ -6,6 +6,7 @@ class Article(models.Model):
     content = models.TextField(blank=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name = "articles")
     image = models.ImageField(upload_to='images/', blank=True)
+    price = models.IntegerField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
