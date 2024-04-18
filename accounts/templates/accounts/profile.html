@@ -7,8 +7,8 @@
 
     <div class="container text-center" style="padding-left: 0;">
         <div class="row row-cols-auto">
-            <div class="col">
-                <p style="font-size: 20px; font-weight: 700;">{{ like_count }}</p>
+            <div class="col" onclick="goToLikeArticles()">
+                <p style="font-size: 20px; font-weight: 700;" >{{ like_count }}</p>
                 <p style="font-size: 16px; font-weight: 400;">찜</p>
             </div>
             <div class="col">
@@ -57,11 +57,14 @@
         </tbody>
     </table>
     <script>
-        function goToEdit(articleID) {
+        function goToEdit() {
             window.location.href = "../../update_profile"
         }
         function goToArticle(articleId) {
             window.location.href = "../../../products/article/" + articleId;
+        }
+        function goToLikeArticles() {
+            window.location.href = "../like_article";
         }
     </script>
     {% endblock content %}

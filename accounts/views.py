@@ -137,3 +137,16 @@ def follow(request, id):
     
     else :
         return redirect('accounts:login')
+    
+
+def like_article(request, id):
+    member = get_object_or_404(get_user_model(), id=id)
+    articles = Article.objects.filter(like_users=member).all()
+    articles_id = [i.id for i in articles]
+    articles_title = [i.title for i in articles]
+    articles_created_at = [time_difference_in_words(i.created_at) for i in articles]
+    context = {
+        "member": member,
+        "articles": zip(articles_id, articles_title, articles_created_at),
+    }
+    return render(request, 'accounts/like_articles.html', context)
