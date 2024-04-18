@@ -16,6 +16,17 @@ class CustomAuthenticationForm(AuthenticationForm):
         "inactive": _("This account is inactive."),
     }
 
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self.fields['username'].help_text = ''
+        self.fields['password'].help_text = ''
+        self.fields['username'].label = ''
+        self.fields['password'].label = ''
+        self.fields['username'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['password'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['username'].widget.attrs['placeholder'] = '아이디'
+        self.fields['password'].widget.attrs['placeholder'] = '비밀번호'
+
 
 class CustomUserCreationForm(UserCreationForm):
     error_messages = {

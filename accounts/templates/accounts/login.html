@@ -9,8 +9,7 @@
                 </div>
                 <form action="" class="custom-login-form" method="POST">
                     {% csrf_token %}
-                    <input type="text" name="username" class="form-control mb-2" style="font-size: 14px;" placeholder="아이디">
-                    <input type="password" name="password"class="form-control mb-3" style="font-size: 14px;" placeholder="비밀번호">
+                    {{ form }}
                     <div class="d-grid gap-2 border-bottom" style="padding-bottom: 1vw;">
                         <input type="submit" class = "btn btn-primary" style="background-color: tomato; 
                         border: 0cap; font-weight: 600; font-size: 14px;"  value="로그인">
