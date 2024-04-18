@@ -7,6 +7,7 @@ from .forms import CustomUserChangeForm, CustomUserCreationForm, CustomAuthentic
 from django.views.decorators.http import require_POST, require_http_methods
 from django.shortcuts import get_object_or_404
 from datetime import datetime
+from .models import User
 import sys, os
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -76,14 +77,21 @@ def signup(request):
 def profile(request, id):
     
     member = get_object_or_404(get_user_model(), id=id)
-    articles = Article.objects.filter(author=member).order_by('-created_at')[:5]
-    articles_id = [i.id for i in articles]
-    articles_title = [i.title for i in articles]
+    articles = Article.objects.filter(author=member).order_by('-created_at')
+    articles_id = [i.id for i in articles[:20]]
+    articles_title = [i.title for i in articles[:20]]
     articles_created_at = [time_difference_in_words(i.created_at) for i in articles]
+    
+    like_count = Article.objects.filter(like_users=member).count()
+    followers_count = User.objects.filter(followings=member).count()
+    following_count = User.objects.filter(followers=member).count()
     context = {
         "member": member,
         "date_joined": change_datetime(member.date_joined),
-        "articles": zip(articles_id, articles_title, articles_created_at)
+        "articles": zip(articles_id, articles_title, articles_created_at),
+        "like_count": like_count,
+        "followers_count": followers_count,
+        "following_count": following_count,
     }
     return render(request, 'accounts/profile.html', context)
 
