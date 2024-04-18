@@ -6,6 +6,21 @@
     color:tomato;
 }
 
+.custom-brand-logo {
+    font-family: "Gasoek One", sans-serif;
+    font-weight: 200;
+    font-size: 40px;
+    font-style: normal;
+    color:tomato;
+}
+
+.custom-login-form {
+    padding-bottom: 3vw;
+    padding-left: 3vw;
+    padding-right: 3vw;
+
+}
+
 .custom-navbar {
     padding-left: 25vw;
     padding-right: 25vw;
@@ -47,4 +62,9 @@ body {
 .custom-follow-button {
     background-color: tomato; 
     border: 0cap;
+}
+
+::placeholder {
+    
+    font-size: 12px;
 }

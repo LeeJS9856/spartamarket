@@ -1,14 +1,31 @@
 {% extends "base_account.html" %}
 
 {% block content %}
-    <h1>로그인</h1>
-    <h1>스파르타 마켓 로고</h1>
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }} <br>
-        <input type="submit" value="로그인">
-    </form>
-    <a href="{% url 'accounts:signup' %}">
-        <button type="button">회원가입</button>
-    </a>
+    <div class ="custom-body">
+        <div class="d-flex justify-content-center">
+            <div class="border border-2 rounded-1" style="margin-top: 10vw; --bs-border-opacity: .5;">
+                <div class="d-flex justify-content-center mt-5 mb-5" >
+                    <a class="custom-brand-logo navbar-brand" href="{% url 'products:home' %}">스파-마켓</a>
+                </div>
+                <form action="" class="custom-login-form" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="username" class="form-control mb-2" style="font-size: 14px;" placeholder="아이디">
+                    <input type="password" name="password"class="form-control mb-3" style="font-size: 14px;" placeholder="비밀번호">
+                    <div class="d-grid gap-2 border-bottom" style="padding-bottom: 1vw;">
+                        <input type="submit" class = "btn btn-primary" style="background-color: tomato; 
+                        border: 0cap; font-weight: 600; font-size: 14px;"  value="로그인">
+                    </div>
+                    <div class="d-grid gap-2" style="padding-top: 1vw;">
+                        <input type="button" onclick="goToSignup()" class = "btn btn-primary" style="background-color: white; 
+                        border-color: tomato; font-weight: 600; color: tomato; font-size: 14px;" value="회원가입">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function goToSignup() {
+            window.location.href = "../signup/"
+        }
+    </script>
 {% endblock content %}
