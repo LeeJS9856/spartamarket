@@ -24,9 +24,23 @@ def time_difference_in_words(time_str):
     else:
         return f'{time_diff.days}일 전'
 
+def format_price(price):
+    if price >= 10000:
+        return f"{round(price / 10000)}만원"
+    elif price >= 1000:
+        thousands = round(price / 1000)
+        if thousands >= 10:
+            return f"{thousands}천원"
+        else:
+            hundreds = round((price % 10000) / 100)
+            return f"{thousands}천 {hundreds}백원"
+    else:
+        return f"{price}원"
 
 def home(request):
     articles = Article.objects.all()
+    for article in articles :
+        article.price = format_price(article.price) 
     context = {"articles": articles}
     return render(request, 'products/home.html', context)
 

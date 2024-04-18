@@ -9,15 +9,15 @@
 <div class="row row-cols-1 row-cols-md-4 g-4 custom-body">
     {% for article in articles %}
     <div class="col" onclick="goToArticle('{{ article.id }}')">
-        <div class="card h-100 rounded-4">
+        <div class="card h-100 rounded-4" style="overflow: hidden">
             {% if article.image %}
-            <img src="{{ article.image.url }}" class="img-fluid rounded-4" alt='{% static "products/noimage.png"%}'>
+            <img src="{{ article.image.url }} " style="width: 240px; height: 160px; object-fit: cover;" class="img-fluid rounded-4" alt='{% static "products/noimage.png"%}'>
             {% else %}
             <img src='{% static "products/noimage.png"%}' class="img-fluid rounded-5" alt="">
             {% endif %}
             <div class="card-body">
                 <h4 class="card-title">{{ article.title }}</h4> <br>
-                <div class="card-text">{{ article.price }} 원</div>
+                <div class="card-text">{{ article.price }}</div>
             </div>
         </div>
     </div>
