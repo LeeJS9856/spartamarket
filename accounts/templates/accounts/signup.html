@@ -1,11 +1,21 @@
 {% extends "base_account.html" %}
 
 {% block content %}
-    <h1>회원가입</h1>
-    <h1>스파르타마켓 로고</h1>
-    <form action="{% url 'accounts:signup' %}" method="POST">
-        {% csrf_token %}
-        <h3> {{ form.as_p }} </h3> <br>
-        <input type="submit" value="가입">
-    </form>
+    <div class ="custom-body">
+        <div class="d-flex justify-content-center">
+            <div class="border border-2 rounded-1" style="margin-top: 10vw; --bs-border-opacity: .5;">
+                <div class="d-flex justify-content-center mt-5 mb-5" >
+                    <a class="custom-brand-logo navbar-brand" href="{% url 'products:home' %}">스파-마켓</a>
+                </div>
+                <form action="{% url 'accounts:signup' %}" class="custom-login-form" method="POST">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div class="d-grid gap-2" style="padding-bottom: 1vw;">
+                        <input type="submit" class = "btn btn-primary" style="background-color: tomato; 
+                        border: 0cap; font-weight: 600; font-size: 14px;"  value="가입">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

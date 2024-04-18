@@ -68,3 +68,12 @@ body {
     
     font-size: 12px;
 }
+
+.custom-form-input {
+    font-size: 14px;
+}
+
+.errorlist {
+    color: tomato;
+    font-size: 14px;
+}

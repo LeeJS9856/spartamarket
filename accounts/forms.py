@@ -1,8 +1,11 @@
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AuthenticationForm, PasswordChangeForm, SetPasswordForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model, password_validation
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
+from django.utils.translation import ngettext
+from django.contrib.auth.password_validation import MinimumLengthValidator, UserAttributeSimilarityValidator, CommonPasswordValidator, NumericPasswordValidator, exceeds_maximum_length_ratio, SequenceMatcher
 from django import forms
+from django.core.exceptions import ValidationError, FieldDoesNotExist
+import re
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -29,11 +32,36 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['username'].help_text = ''
         self.fields['password1'].help_text = ''
         self.fields['password2'].help_text = ''
-        self.fields['username'].label = '아이디'
-        self.fields['nickname'].label = '닉네임'
-        self.fields['password1'].label = '비밀번호'
-        self.fields['password2'].label = '비밀번호 확인'
-
+        self.fields['username'].label = ''
+        self.fields['nickname'].label = ''
+        self.fields['password1'].label = ''
+        self.fields['password2'].label = ''
+        self.fields['username'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['nickname'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['password1'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['password2'].widget.attrs['class'] = 'form-control mb-3 custom-form-input'
+        self.fields['username'].widget.attrs['placeholder'] = '아이디'
+        self.fields['nickname'].widget.attrs['placeholder'] = '닉네임'
+        self.fields['password1'].widget.attrs['placeholder'] = '비밀번호'
+        self.fields['password2'].widget.attrs['placeholder'] = '비밀번호 확인'
+        
+    def clean_username(self):
+        """Reject usernames that differ only in case."""
+        username = self.cleaned_data.get("username")
+        if (
+            username
+            and self._meta.model.objects.filter(username__iexact=username).exists()
+        ):
+            self._update_errors(
+                ValidationError(
+                    {
+                        "username": "이미 존재하는 아이디 입니다."
+                        
+                    }
+                )
+            )
+        else:
+            return username
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
@@ -68,3 +96,68 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         strip=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
     )
+
+class CustomMinimunMinimumLengthValidator(MinimumLengthValidator):
+    def validate(self, password, user=None):
+        if len(password) < self.min_length:
+            raise ValidationError(
+                ngettext(
+                    "비밀번호가 너무 짧습니다. 비밀번호는 적어도 "
+                    "%(min_length)d자 이상이어야 합니다.",
+                    "비밀번호가 너무 짧습니다. 비밀번호는 적어도 "
+                    "%(min_length)d자 이상이어야 합니다.",
+                    self.min_length,
+                ),
+                code="password_too_short",
+                params={"min_length": self.min_length},
+            )
+
+class CustomUserAttributeSimilarityValidator(UserAttributeSimilarityValidator) :
+    def validate(self, password, user=None):
+        if not user:
+            return
+
+        password = password.lower()
+        for attribute_name in self.user_attributes:
+            value = getattr(user, attribute_name, None)
+            if not value or not isinstance(value, str):
+                continue
+            value_lower = value.lower()
+            value_parts = re.split(r"\W+", value_lower) + [value_lower]
+            for value_part in value_parts:
+                if exceeds_maximum_length_ratio(
+                    password, self.max_similarity, value_part
+                ):
+                    continue
+                if (
+                    SequenceMatcher(a=password, b=value_part).quick_ratio()
+                    >= self.max_similarity
+                ):
+                    try:
+                        verbose_name = str(
+                            user._meta.get_field(attribute_name).verbose_name
+                        )
+                    except FieldDoesNotExist:
+                        verbose_name = attribute_name
+                    raise ValidationError(
+                        _("비밀번호가 %(verbose_name)s와 유사합니다."),
+                        code="password_too_similar",
+                        params={"verbose_name": verbose_name},
+                    )
+
+class CustomCommonPasswordValidator(CommonPasswordValidator):
+    def validate(self, password, user=None):
+        if password.lower().strip() in self.passwords:
+            raise ValidationError(
+                _("비밀번호에 중복이 너무 많습니다.."),
+                code="password_too_common",
+            )
+        
+class CustomNumericPasswordValidator(NumericPasswordValidator):
+    def validate(self, password, user=None):
+        if password.isdigit():
+            raise ValidationError(
+                _("비밀번호는 숫자로 이루어질 수 없습니다."),
+                code="password_entirely_numeric",
+            )
+
