@@ -106,7 +106,7 @@ def update_profile(request):
         if form_password.is_valid():
             form_password.save()
             update_session_auth_hash(request, form_password.user)
-            return redirect('accounts:profile')
+            return redirect('accounts:profile', request.user.id)
     else:
         form_password = CustomPasswordChangeForm(request.user)
         form_name = CustomUserChangeForm(instance=request.user)

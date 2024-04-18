@@ -1,9 +1,10 @@
-from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm, AuthenticationForm, PasswordChangeForm, PasswordChangeForm, ReadOnlyPasswordHashField, ReadOnlyPasswordHashWidget, UsernameField
 from django.contrib.auth import get_user_model, password_validation
 from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
+from django.utils.translation import ngettext, gettext
 from django.contrib.auth.password_validation import MinimumLengthValidator, UserAttributeSimilarityValidator, CommonPasswordValidator, NumericPasswordValidator, exceeds_maximum_length_ratio, SequenceMatcher
 from django import forms
+from django.contrib.auth.hashers import UNUSABLE_PASSWORD_PREFIX, identify_hasher
 from django.core.exceptions import ValidationError, FieldDoesNotExist
 import re
 
@@ -73,28 +74,77 @@ class CustomUserCreationForm(UserCreationForm):
             )
         else:
             return username
+        
+class CustomReadOnlyPasswordHashWidget(ReadOnlyPasswordHashWidget) :
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        summary = []
+        if not value or value.startswith(UNUSABLE_PASSWORD_PREFIX):
+            summary.append({"label": gettext("")})
+        else:
+            try:
+                hasher = identify_hasher(value)
+            except ValueError:
+                summary.append(
+                    {
+                        "label": gettext(
+                            "Invalid password format or unknown hashing algorithm."
+                        )
+                    }
+                )
+            else:
+                for key, value_ in hasher.safe_summary(value).items():
+                    summary.append({"label": gettext(key), "value": value_})
+        context["summary"] = summary
+        return context
 
-class CustomUserChangeForm(UserChangeForm):
+class CustomReadOnlyPasswordHashField(ReadOnlyPasswordHashField) :
+    widget = CustomReadOnlyPasswordHashWidget
+
+class CustomUserChangeForm(UserChangeForm):  
+    password = CustomReadOnlyPasswordHashField(
+        label=_("Password"),
+        help_text=_(
+            "Raw passwords are not stored, so there is no way to see this "
+            "user’s password, but you can change the password using "
+            '<a href="{}">this form</a>.'
+        ),
+    )
+
     class Meta:
         model = get_user_model()
         fields = (
             "nickname",
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nickname'].label = ''
+        self.fields['nickname'].help_text = ''
+        self.fields['nickname'].widget.attrs['placeholder'] = '닉네임'
+        self.fields['nickname'].widget.attrs['class'] = 'form-control custom-form-input'
+        self.fields['password'].label = ''
+        self.fields['password'].help_text = ''
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     error_messages = {
-        "password_mismatch": _("새로운 비밀번호가 일치하지 않습니다."),
+        "password_mismatch": _("새 비밀번호가 일치하지 않습니다."),
         "password_incorrect": _(
             "기존 비밀번호가 일치하지 않습니다."
         ),
     }
     def __init__(self, user, *args, **kwargs):
         super().__init__(user, *args, **kwargs)
-        self.fields['old_password'].label = '기존 비밀번호'
-        self.fields['new_password1'].label = '새로운 비밀번호'
-        self.fields['new_password2'].label = '새로운 비밀번호 확인'
+        self.fields['old_password'].label = ''
+        self.fields['new_password1'].label = ''
+        self.fields['new_password2'].label = ''
         self.fields['new_password1'].help_text = ''
+        self.fields['old_password'].widget.attrs['placeholder'] = '기존 비밀번호'
+        self.fields['new_password1'].widget.attrs['placeholder'] = '새 비밀번호'
+        self.fields['new_password2'].widget.attrs['placeholder'] = '새 비밀번호 확인'
+        self.fields['old_password'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control mb-2 custom-form-input'
 
     new_password1 = forms.CharField(
         label=_("New password"),

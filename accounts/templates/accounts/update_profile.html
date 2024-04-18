@@ -1,15 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>내 정보 수정</h1>
-    <form action="{% url 'accounts:update_nickname' %}" method="POST">
-        {% csrf_token %}
-        <p>닉네임 : {{ form_name.nickname }} </p> <br>
-        <input type="submit" value="닉네임 변경">
-    </form>
-    <form action="{% url 'accounts:update_profile' %}" method="POST">
-        {% csrf_token %}
-        {{ form_password.as_p}}
-        <input type="submit" value="비밀번호 변경">
-    </form>
+    <div class ="custom-body">
+        <div class="d-flex justify-content-center">
+            <div class="border border-2 rounded-1" style="margin-top: 10vw; --bs-border-opacity: .5;">
+                <div class="d-flex justify-content-center mt-5 mb-5" >
+                    <a class="custom-brand-logo navbar-brand" href="{% url 'products:home' %}">스파-마켓</a>
+                </div>
+                <form action="{% url 'accounts:update_nickname' %}" class="custom-login-form row g-2" method="POST">
+                    {% csrf_token %}
+                    <div class="col-auto">
+                        {{ form_name }}
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" class = "btn btn-primary mb-3" style="background-color: tomato; 
+                        border: 0cap; font-weight: 600; font-size: 14px;"  value="닉네임 수정">
+                    </div>
+                </form>
+                <form action="{% url 'accounts:update_profile' %}" class="custom-login-form" method="POST">
+                    {% csrf_token %}
+                    {{ form_password }}
+                    <div class="d-grid gap-2" style="padding-bottom: 1vw;">
+                        <input type="submit" class = "btn btn-primary" style="background-color: tomato; 
+                        border: 0cap; font-weight: 600; font-size: 14px;"  value="저장">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
