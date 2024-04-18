@@ -6,7 +6,33 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 from .forms import CustomUserChangeForm, CustomUserCreationForm, CustomAuthenticationForm, CustomPasswordChangeForm
 from django.views.decorators.http import require_POST, require_http_methods
 from django.shortcuts import get_object_or_404
+from datetime import datetime
+import sys, os
 
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+from products.models import Article
+
+def change_datetime(date_time_obj):
+    date_obj = datetime.strptime(str(date_time_obj), "%Y-%m-%d %H:%M:%S.%f%z")
+    return date_obj.strftime("%Y년 %m월 %d일")
+
+def time_difference_in_words(time_str):
+    input_time = datetime.strptime(str(time_str), "%Y-%m-%d %H:%M:%S.%f%z")
+    now = datetime.now(input_time.tzinfo)
+    time_diff = now - input_time
+    minutes_diff = time_diff.total_seconds() / 60
+
+    if minutes_diff < 10:
+        return '방금'
+    elif minutes_diff < 30:
+        return '10분 전'
+    elif minutes_diff < 60:
+        return '30분 전'
+    elif time_diff.days == 0:
+        return f'{int(minutes_diff / 60)}시간 전'
+    else:
+        return f'{time_diff.days}일 전'
 
 @require_http_methods(['GET', 'POST'])
 def login(request):
@@ -48,9 +74,16 @@ def signup(request):
 
 
 def profile(request, id):
+    
     member = get_object_or_404(get_user_model(), id=id)
+    articles = Article.objects.filter(author=member).order_by('-created_at')[:5]
+    articles_id = [i.id for i in articles]
+    articles_title = [i.title for i in articles]
+    articles_created_at = [time_difference_in_words(i.created_at) for i in articles]
     context = {
         "member": member,
+        "date_joined": change_datetime(member.date_joined),
+        "articles": zip(articles_id, articles_title, articles_created_at)
     }
     return render(request, 'accounts/profile.html', context)
 
