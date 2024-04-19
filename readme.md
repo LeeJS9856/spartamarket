@@ -3,15 +3,15 @@
 스파르타 마켓 프로젝트 '스파-마켓'은 스파르타 코딩클럽'의 프로젝트 일환으로,
 중고 거래 게시판 형태의 웹 사이트 입니다. 
 
-
-
+</br>
+</br>
 
 ## 개발기간
 
 - 2024.04.15(월) ~ 2024.04.18(목)
 
-
-
+</br>
+</br>
 
 ## 개발 환경
 
@@ -36,8 +36,8 @@
 - Bootstrap
 
 
-
-
+</br>
+</br>
 
 ## 기능 상세
 
@@ -54,19 +54,24 @@
 - **로그인** : 로그인 한 유저는 글을 등록할 수 있고, 팔로우 및 찜 기능을 사용할 수 있습니다.
 
 
+</br>
+</br>
 
 ## 와이어프레임
 
 ![와이어프레임](https://github.com/LeeJS9856/spartamarket/blob/master/spartamarket%20%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84_240419_110408_0.png)
 
 
-
+</br>
+</br>
 
 ## ERD
 
 ![ERD](https://github.com/LeeJS9856/spartamarket/blob/master/%EC%8A%A4%ED%8C%8C%EB%A7%88%EC%BC%93/ERD.png)
 
 
+</br>
+</br>
 
 ## API 명세
 
@@ -80,7 +85,8 @@
 |          | 게시글 삭제     | POST    |       |                   |       |
 
 
-
+</br>
+</br>
 
 
 ## 웹사이트 예시
