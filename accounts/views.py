@@ -149,3 +149,4 @@ def like_article(request, id):
         "articles": zip(articles_id, articles_title, articles_created_at),
     }
     return render(request, 'accounts/like_articles.html', context)
+
